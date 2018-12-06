@@ -7,7 +7,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
   <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU"
+    crossorigin="anonymous">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
   <link href="CustomStyles.css" rel="stylesheet" />
@@ -33,7 +34,8 @@
     crossorigin="anonymous">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp"
     crossorigin="anonymous">
-  <title>Professional Blender</title>
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/semantic-ui@2.4.0/dist/semantic.min.css"></link>
+  <title>Dictionary Manager</title>
 </head>
 
 <body>
@@ -55,48 +57,6 @@
     crossorigin="anonymous"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T"
     crossorigin="anonymous"></script>
-  <script>
-    $('#carouselExample').on('slide.bs.carousel', function (e) {
-
-
-      var $e = $(e.relatedTarget);
-      var idx = $e.index();
-      var itemsPerSlide = 3;
-      var totalItems = $('.carousel-item').length;
-
-      if (idx >= totalItems - (itemsPerSlide - 1)) {
-        var it = itemsPerSlide - (totalItems - idx);
-        for (var i = 0; i < it; i++) {
-          // append slides to end
-          if (e.direction == "left") {
-            $('.carousel-item').eq(i).appendTo('.carousel-inner');
-          }
-          else {
-            $('.carousel-item').eq(0).appendTo('.carousel-inner');
-          }
-        }
-      }
-    });
-
-
-    $('#carouselExample').carousel({
-      interval: 2000
-    });
-
-
-    $(document).ready(function () {
-      /* show lightbox when clicking a thumbnail */
-      $('a.thumb').click(function (event) {
-        event.preventDefault();
-        var content = $('.modal-body');
-        content.empty();
-        var title = $(this).attr("title");
-        $('.modal-title').html(title);
-        content.html($(this).html());
-        $(".modal-profile").modal({ show: true });
-      });
-
-    });</script>
 </body>
 
 </html>

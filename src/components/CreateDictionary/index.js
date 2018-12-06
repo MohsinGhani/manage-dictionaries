@@ -3,30 +3,74 @@ import './index.css'
 import { connect } from 'react-redux';
 import { dictionaryAction } from './../../store/actions'
 import { withRouter } from 'react-router-dom';
-import { Container  } from 'semantic-ui-react'
+import { Container, Input, Grid, Divider, Button, Icon, Segment, Header } from 'semantic-ui-react'
 
 class CreateDictionary extends Component {
     constructor(props) {
         super(props)
-        this.state = {}
+        this.state = {
+            dictionary: [{ domain: '', range: '' }]
+        }
+    }
+
+    addRowInDictionary = () => {
+        let dictionary = this.state.dictionary
+        dictionary.push({ domain: '', range: '' })
+        this.setState({ dictionary })
+    }
+
+    removeRowInDictionary = (index) => {
+        let dictionary = this.state.dictionary
+        if (dictionary.length === 1) return;
+        dictionary.splice(index, 1)
+        this.setState({ dictionary })
     }
 
     render() {
         return (
             <Container className="fade-in">
-                <h1>Create</h1>
-                <p>
-                    Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.
-                    Aenean massa strong. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur
-                    ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla
-                    consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu.
-                    In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede
-                    link mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean
-                    vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac,
-                    enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla
-                    ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue.
-                    Curabitur ullamcorper ultricies nisi.
-                </p>
+                <Segment clearing color='violet'>
+                    <Header as='h3' textAlign='left'>
+                        Create Dictionary
+                    </Header>
+                </Segment>
+
+                <Segment clearing color='blue'>
+                    {
+                        this.state.dictionary && this.state.dictionary.map((row, index) => {
+                            return (
+                                <div style={{ margin: '10px 0 10px 0' }} className="row" key={index}>
+                                    <div className='col-md-1'></div>
+                                    <div className='col-md-5'>
+                                        <Input focus fluid placeholder='Write Domain here' />
+                                    </div>
+                                    <div className='col-md-5'>
+                                        <Input focus fluid placeholder='Write Range here' />
+                                    </div>
+                                    <div className='col-md-1'>
+                                        <Button circular basic icon onClick={() => this.removeRowInDictionary(index)}>
+                                            <Icon name='delete' />
+                                        </Button>
+                                    </div>
+                                </div>
+                            )
+                        })
+                    }
+                    <br />
+                    <div className="row" style={{ margin: '0' }} >
+                        <div className="col-md-1"></div>
+                        <div className="col-md-10">
+                            <Button basic fluid color='blue'>
+                                Create
+                        </Button>
+                        </div>
+                        <div className="col-md-1" title='add a new row'>
+                            <Button icon onClick={this.addRowInDictionary}>
+                                <Icon name='add square' />
+                            </Button>
+                        </div>
+                    </div>
+                </Segment>
             </Container>
         );
     }

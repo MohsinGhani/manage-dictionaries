@@ -26,6 +26,18 @@ class CreateDictionary extends Component {
         this.setState({ dictionary })
     }
 
+    handleDomainInput = (e, i) => {
+        let dictionary = this.state.dictionary
+        dictionary[i].domain = e.target.value
+        this.setState({ dictionary })
+    }
+
+    handleRangeInput = (e, i) => {
+        let dictionary = this.state.dictionary
+        dictionary[i].range = e.target.value
+        this.setState({ dictionary })
+    }
+
     render() {
         return (
             <Container className="fade-in">
@@ -42,10 +54,10 @@ class CreateDictionary extends Component {
                                 <div style={{ margin: '10px 0 10px 0' }} className="row" key={index}>
                                     <div className='col-md-1'></div>
                                     <div className='col-md-5'>
-                                        <Input focus fluid placeholder='Write Domain here' />
+                                        <Input focus fluid placeholder='Write Domain here' onChange={(event) => this.handleDomainInput(event, index)} />
                                     </div>
                                     <div className='col-md-5'>
-                                        <Input focus fluid placeholder='Write Range here' />
+                                        <Input focus fluid placeholder='Write Range here' onChange={(event) => this.handleRangeInput(event, index)} />
                                     </div>
                                     <div className='col-md-1'>
                                         <Button circular basic icon onClick={() => this.removeRowInDictionary(index)}>

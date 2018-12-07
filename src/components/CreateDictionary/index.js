@@ -15,7 +15,11 @@ class CreateDictionary extends Component {
 
     addRowInDictionary = () => {
         let dictionary = this.state.dictionary
-        dictionary.push({ domain: '', range: '' })
+        if (dictionary) {
+            dictionary.push({ domain: '', range: '' })
+        } else {
+            dictionary = [{ domain: '', range: '' }]
+        }
         this.setState({ dictionary })
     }
 
@@ -38,10 +42,15 @@ class CreateDictionary extends Component {
         this.setState({ dictionary })
     }
 
+    createNewDictionary = () => {
+        this.props.createDictionary(this.state.dictionary)
+        this.setState({ dictionary: null })
+    }
+
     render() {
         return (
             <Container className="fade-in">
-                <Segment clearing color='violet'>
+                <Segment>
                     <Header as='h3' textAlign='left'>
                         Create Dictionary
                     </Header>
@@ -72,9 +81,9 @@ class CreateDictionary extends Component {
                     <div className="row" style={{ margin: '0' }} >
                         <div className="col-md-1"></div>
                         <div className="col-md-10">
-                            <Button basic fluid color='blue'>
+                            <Button onClick={this.createNewDictionary} basic fluid color='blue'>
                                 Create
-                        </Button>
+                            </Button>
                         </div>
                         <div className="col-md-1" title='add a new row'>
                             <Button icon onClick={this.addRowInDictionary}>
@@ -95,7 +104,9 @@ const mapStateToProps = (state) => {
 
 
 const mapDispatchToProps = (dispatch) => {
-    return {};
+    return {
+        createDictionary: (dictionary) => dispatch(dictionaryAction.createDictionary(dictionary)),
+    };
 };
 
 export default connect(

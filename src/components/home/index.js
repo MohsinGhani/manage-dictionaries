@@ -63,7 +63,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        createDictionary: () => dispatch(dictionaryAction.createDictionary()),
+        createDictionary: (dictionary) => dispatch(dictionaryAction.createDictionary(dictionary)),
     };
 };
 

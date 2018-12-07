@@ -7,9 +7,10 @@ import {
 
 export class dictionaryAction {
 
-    static createDictionary() {
+    static createDictionary(payload) {
         return {
-            type: CREATE_DICTIONARY
+            type: CREATE_DICTIONARY,
+            payload
         }
     }
 

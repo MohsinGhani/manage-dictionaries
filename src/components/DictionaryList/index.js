@@ -4,13 +4,14 @@ import { connect } from 'react-redux';
 import { dictionaryAction } from './../../store/actions'
 import TopNav from './../Header'
 import { withRouter } from 'react-router-dom';
-import { Container, Accordion, Icon, Segment, Table, Button, Message } from 'semantic-ui-react'
+import { Container, Accordion, Icon, Segment, Table, Button, Message, Loader, Dimmer } from 'semantic-ui-react'
 
 class DictionaryList extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            activeIndex: 0
+            activeIndex: 0,
+            artificialLoader: false
         }
     }
 
@@ -19,6 +20,16 @@ class DictionaryList extends Component {
     }
 
     removeRowFromDictionary = (index) => { }
+
+    deleteDictionary = (index) => {
+        this.setState({ artificialLoader: true })
+        setTimeout(() => {
+            let dictionaries = this.props.dictionaries
+            dictionaries.splice(index, 1)
+            this.props.deleteDictionary(dictionaries)
+            this.setState({ artificialLoader: false })
+        }, 2000)
+    }
 
     componentDidMount() {
         this.props.getDictionaries()
@@ -41,7 +52,11 @@ class DictionaryList extends Component {
                                                     <Table.Row>
                                                         <Table.HeaderCell>Domain</Table.HeaderCell>
                                                         <Table.HeaderCell>Range</Table.HeaderCell>
-                                                        <Table.HeaderCell></Table.HeaderCell>
+                                                        <Table.HeaderCell>
+                                                            <Button onClick={() => this.deleteDictionary(i)} icon color='red'>
+                                                                <Icon name={this.state.artificialLoader ? 'stop' : 'remove circle'} />
+                                                            </Button>
+                                                        </Table.HeaderCell>
                                                     </Table.Row>
                                                 </Table.Header>
                                                 <Table.Body>
@@ -92,7 +107,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        getDictionaries: () => dispatch(dictionaryAction.getDictionaries())
+        getDictionaries: () => dispatch(dictionaryAction.getDictionaries()),
+        deleteDictionary: (payload) => dispatch(dictionaryAction.deleteDictionary(payload))
     };
 };
 

@@ -83,7 +83,7 @@ class EditDictionary extends Component {
         this.setState({ artificialLoader: true })
         setTimeout(() => {
             this.props.updateDictionary(dictionaries)
-        }, 2000)
+        }, 1000)
     }
 
     removeConsistency = () => {

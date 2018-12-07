@@ -59,7 +59,7 @@ class CreateDictionary extends Component {
         this.setState({ artificialLoader: true })
         setTimeout(() => {
             this.props.createDictionary(this.state.dictionary)
-        }, 2000)
+        }, 1000)
     }
 
     removeConsistency = () => {

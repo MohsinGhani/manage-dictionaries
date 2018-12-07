@@ -26,16 +26,14 @@ class DictionaryList extends Component {
             dictionaries.splice(index, 1)
             this.props.deleteDictionary(dictionaries)
             this.setState({ artificialLoader: false })
-        }, 1000)
+        }, 500)
     }
 
     deleteDictionaryRow = (dicIndex, rowIndex) => {
-        setTimeout(() => {
-            let dictionaries = this.props.dictionaries
-            dictionaries[dicIndex].splice(rowIndex, 1)
-            this.props.deleteDictionary(dictionaries)
-            this.setState({ artificialLoader: false })
-        }, 1000)
+        let dictionaries = this.props.dictionaries
+        dictionaries[dicIndex].splice(rowIndex, 1)
+        this.props.deleteDictionary(dictionaries)
+        this.setState({ artificialLoader: false })
     }
 
     componentDidMount() {

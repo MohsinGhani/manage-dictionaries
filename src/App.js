@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
-import Home from './components/home'
+import CreateDictionary from './components/CreateDictionary'
+import DictionaryList from './components/DictionaryList'
 import { Provider } from 'react-redux';
 import store from './store/store'
 import { BrowserRouter as Router, Route } from 'react-router-dom';
@@ -11,7 +12,8 @@ class App extends Component {
       <Provider store={store}>
         <Router>
           <div className="App">
-            <Route exact path="/" component={Home} />
+            <Route exact path="/" component={DictionaryList} />
+            <Route exact path="/create-dictionary" component={CreateDictionary} />
           </div>
         </Router>
       </Provider>

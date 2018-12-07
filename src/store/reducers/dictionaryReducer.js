@@ -17,6 +17,7 @@ export default function dictionaryReducer(state = initialState, action) {
     switch (action.type) {
         case GET_DICTIONARIES:
             return {
+                ...state,
                 dictionaries: null,
                 getDictionariesLoader: true,
                 getDictionariesError: null
@@ -24,6 +25,7 @@ export default function dictionaryReducer(state = initialState, action) {
 
         case GET_DICTIONARIES_SUCCESS:
             return {
+                ...state,
                 dictionaries: action.payload.dictionaries,
                 getDictionariesLoader: false,
                 getDictionariesError: null
@@ -31,6 +33,7 @@ export default function dictionaryReducer(state = initialState, action) {
 
         case GET_DICTIONARIES_FAILURE:
             return {
+                ...state,
                 dictionaries: null,
                 getDictionariesLoader: false,
                 getDictionariesError: action.payload
@@ -38,6 +41,7 @@ export default function dictionaryReducer(state = initialState, action) {
 
         case CREATE_DICTIONARY:
             return {
+                ...state,
                 createdDictionary: null,
                 createDictionaryLoader: true,
                 createDictionaryError: null
@@ -45,6 +49,7 @@ export default function dictionaryReducer(state = initialState, action) {
 
         case CREATE_DICTIONARY_SUCCESS:
             return {
+                ...state,
                 createdDictionary: action.payload,
                 createDictionaryLoader: false,
                 createDictionaryError: null
@@ -52,6 +57,7 @@ export default function dictionaryReducer(state = initialState, action) {
 
         case CREATE_DICTIONARY_FAILURE:
             return {
+                ...state,
                 createdDictionary: null,
                 createDictionaryLoader: false,
                 createDictionaryError: action.payload

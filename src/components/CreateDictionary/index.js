@@ -4,12 +4,14 @@ import { connect } from 'react-redux';
 import { dictionaryAction } from './../../store/actions'
 import { withRouter } from 'react-router-dom';
 import { Container, Input, Grid, Divider, Button, Icon, Segment, Header } from 'semantic-ui-react'
+import TopNav from './../Header'
 
 class CreateDictionary extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            dictionary: [{ domain: '', range: '' }]
+            dictionary: [{ domain: '', range: '' }],
+            artificialLoader: false
         }
     }
 
@@ -43,63 +45,76 @@ class CreateDictionary extends Component {
     }
 
     createNewDictionary = () => {
-        this.props.createDictionary(this.state.dictionary)
-        this.setState({ dictionary: null })
+        this.setState({ artificialLoader: true })
+        setTimeout(() => {
+            this.props.createDictionary(this.state.dictionary)
+        }, 2000)
     }
 
+    componentWillUpdate(nextProps) {
+        if (this.props.createDictionaryLoader && !nextProps.createDictionaryLoader && !nextProps.createDictionaryError) {
+            this.props.history.push('/')
+        }
+    }
     render() {
         return (
-            <Container className="fade-in">
-                <Segment>
-                    <Header as='h3' textAlign='left'>
-                        Create Dictionary
+            <div>
+                <TopNav {...this.props} />
+                <Container className="fade-in">
+                    <Segment>
+                        <Header as='h3' textAlign='left'>
+                            Create Dictionary
                     </Header>
-                </Segment>
+                    </Segment>
 
-                <Segment clearing color='blue'>
-                    {
-                        this.state.dictionary && this.state.dictionary.map((row, index) => {
-                            return (
-                                <div style={{ margin: '10px 0 10px 0' }} className="row" key={index}>
-                                    <div className='col-md-1'></div>
-                                    <div className='col-md-5'>
-                                        <Input focus fluid placeholder='Write Domain here' onChange={(event) => this.handleDomainInput(event, index)} />
+                    <Segment clearing color='blue'>
+                        {
+                            this.state.dictionary && this.state.dictionary.map((row, index) => {
+                                return (
+                                    <div style={{ margin: '10px 0 10px 0' }} className="row" key={index}>
+                                        <div className='col-md-1'></div>
+                                        <div className='col-md-5'>
+                                            <Input focus fluid placeholder='Write Domain here' onChange={(event) => this.handleDomainInput(event, index)} />
+                                        </div>
+                                        <div className='col-md-5'>
+                                            <Input focus fluid placeholder='Write Range here' onChange={(event) => this.handleRangeInput(event, index)} />
+                                        </div>
+                                        <div className='col-md-1'>
+                                            <Button circular basic icon onClick={() => this.removeRowInDictionary(index)}>
+                                                <Icon name='delete' />
+                                            </Button>
+                                        </div>
                                     </div>
-                                    <div className='col-md-5'>
-                                        <Input focus fluid placeholder='Write Range here' onChange={(event) => this.handleRangeInput(event, index)} />
-                                    </div>
-                                    <div className='col-md-1'>
-                                        <Button circular basic icon onClick={() => this.removeRowInDictionary(index)}>
-                                            <Icon name='delete' />
-                                        </Button>
-                                    </div>
-                                </div>
-                            )
-                        })
-                    }
-                    <br />
-                    <div className="row" style={{ margin: '0' }} >
-                        <div className="col-md-1"></div>
-                        <div className="col-md-10">
-                            <Button onClick={this.createNewDictionary} basic fluid color='blue'>
-                                Create
-                            </Button>
+                                )
+                            })
+                        }
+                        <br />
+                        <div className="row" style={{ margin: '0' }} >
+                            <div className="col-md-1"></div>
+                            <div className="col-md-10">
+                                <Button loading={this.state.artificialLoader} onClick={this.createNewDictionary} basic fluid color='blue'>
+                                    Create
+                                </Button>
+                            </div>
+                            <div className="col-md-1" title='add a new row'>
+                                <Button icon onClick={this.addRowInDictionary}>
+                                    <Icon name='add square' />
+                                </Button>
+                            </div>
                         </div>
-                        <div className="col-md-1" title='add a new row'>
-                            <Button icon onClick={this.addRowInDictionary}>
-                                <Icon name='add square' />
-                            </Button>
-                        </div>
-                    </div>
-                </Segment>
-            </Container>
+                    </Segment>
+                </Container>
+            </div>
         );
     }
 }
 
 const mapStateToProps = (state) => {
-    const { } = state;
-    return {}
+    const { dictionaryReducer: { createdDictionary, createDictionaryLoader, createDictionaryError }
+    } = state;
+    return {
+        createdDictionary, createDictionaryLoader, createDictionaryError
+    }
 }
 
 

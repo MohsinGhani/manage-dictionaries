@@ -12,7 +12,8 @@ class CreateDictionary extends Component {
         this.state = {
             dictionary: [{ domain: '', range: '' }],
             artificialLoader: false,
-            isConsistence: true
+            isConsistence: true,
+            isEmptyField: true
         }
     }
 
@@ -23,7 +24,7 @@ class CreateDictionary extends Component {
         } else {
             dictionary = [{ domain: '', range: '' }]
         }
-        this.setState({ dictionary })
+        this.setState({ dictionary, isEmptyField: true })
     }
 
     removeRowInDictionary = (index) => {
@@ -35,22 +36,34 @@ class CreateDictionary extends Component {
 
     handleDomainInput = (e, i) => {
         let dictionary = this.state.dictionary
+        this.setState({ isEmptyField: false })
         this.handleConsistency(dictionary, e.target.value)
         dictionary[i].domain = e.target.value
         this.setState({ dictionary })
+        this.handleEmptyField()
     }
 
     handleRangeInput = (e, i) => {
         let dictionary = this.state.dictionary
+        this.setState({ isEmptyField: false })
         this.handleConsistency(dictionary, e.target.value)
         dictionary[i].range = e.target.value
         this.setState({ dictionary })
+        this.handleEmptyField()
     }
 
     handleConsistency = (dictionary, value) => {
         dictionary && dictionary.map((data, index) => {
             if (data.domain === value || data.range === value) {
-                this.setState({ isConsistence: false })
+                this.setState({ isConsistence: false, isEmptyField: true })
+            }
+        })
+    }
+
+    handleEmptyField = () => {
+        this.state.dictionary && this.state.dictionary.map((data, index) => {
+            if (data.domain === '' || data.range === '') {
+                this.setState({ isEmptyField: true })
             }
         })
     }
@@ -74,6 +87,7 @@ class CreateDictionary extends Component {
             this.props.history.push('/')
         }
     }
+
     render() {
         return (
             <div>
@@ -85,7 +99,7 @@ class CreateDictionary extends Component {
                         </Header>
                     </Segment>
                     {
-                        !this.state.isConsistence ? <Message color='red'>Inconsistency Occurred <a onClick={this.removeConsistency} style={{ cursor: 'pointer' }}><strong>Clear</strong></a></Message> : ''
+                        !this.state.isConsistence ? <Message color='red'>Inconsistency Occurred Click here to <a onClick={this.removeConsistency} style={{ cursor: 'pointer' }}><strong>Clear</strong></a></Message> : ''
                     }
                     <Segment clearing color='blue'>
                         {
@@ -112,7 +126,7 @@ class CreateDictionary extends Component {
                         <div className="row" style={{ margin: '0' }} >
                             <div className="col-md-1"></div>
                             <div className="col-md-10">
-                                <Button loading={this.state.artificialLoader} disabled={!this.state.isConsistence} onClick={this.createNewDictionary} basic fluid color='blue'>
+                                <Button loading={this.state.artificialLoader} disabled={!this.state.isConsistence || this.state.isEmptyField} onClick={this.createNewDictionary} basic fluid color='blue'>
                                     Create
                                 </Button>
                             </div>

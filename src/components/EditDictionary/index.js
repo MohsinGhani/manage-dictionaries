@@ -12,7 +12,8 @@ class EditDictionary extends Component {
         this.state = {
             dictionary: [{ domain: '', range: '' }],
             artificialLoader: false,
-            isConsistence: true
+            isConsistence: true,
+            isEmptyField: true
         }
     }
 
@@ -45,7 +46,7 @@ class EditDictionary extends Component {
         } else {
             dictionary = [{ domain: '', range: '' }]
         }
-        this.setState({ dictionary })
+        this.setState({ dictionary, isEmptyField: true  })
     }
 
     removeRowInDictionary = (index) => {
@@ -57,16 +58,20 @@ class EditDictionary extends Component {
 
     handleDomainInput = (e, i) => {
         let dictionary = this.state.dictionary
+        this.setState({ isEmptyField: false })
         this.handleConsistency(dictionary, e.target.value)
         dictionary[i].domain = e.target.value
         this.setState({ dictionary })
+        this.handleEmptyField()
     }
 
     handleRangeInput = (e, i) => {
         let dictionary = this.state.dictionary
+        this.setState({ isEmptyField: false })
         this.handleConsistency(dictionary, e.target.value)
         dictionary[i].range = e.target.value
         this.setState({ dictionary })
+        this.handleEmptyField()
     }
 
     handleConsistency = (dictionary, value) => {
@@ -94,6 +99,14 @@ class EditDictionary extends Component {
         this.props.history.push('/')
     }
 
+    handleEmptyField = () => {
+        this.state.dictionary && this.state.dictionary.map((data, index) => {
+            if (data.domain === '' || data.range === '') {
+                this.setState({ isEmptyField: true })
+            }
+        })
+    }
+
     componentWillUpdate(nextProps) {
         if (this.props.updateDictionaryLoader && !nextProps.updateDictionaryLoader && !nextProps.updateDictionaryError) {
             this.props.history.push('/')
@@ -106,7 +119,7 @@ class EditDictionary extends Component {
                 <Container className="fade-in">
                     <Segment>
                         <Header as='h3' textAlign='left'>
-                            Create Dictionary
+                            Update Dictionary
                         </Header>
                     </Segment>
                     {
@@ -137,7 +150,7 @@ class EditDictionary extends Component {
                         <div className="row" style={{ margin: '0' }} >
                             <div className="col-md-1"></div>
                             <div className="col-md-10">
-                                <Button loading={this.state.artificialLoader} disabled={!this.state.isConsistence} onClick={this.updateDictionary} basic fluid color='blue'>
+                                <Button loading={this.state.artificialLoader} disabled={!this.state.isConsistence || this.state.isEmptyField} onClick={this.updateDictionary} basic fluid color='blue'>
                                     Update
                                 </Button>
                             </div>

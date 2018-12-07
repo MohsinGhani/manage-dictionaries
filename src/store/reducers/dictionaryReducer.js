@@ -2,6 +2,7 @@ import {
     CREATE_DICTIONARY, CREATE_DICTIONARY_SUCCESS, CREATE_DICTIONARY_FAILURE,
     GET_DICTIONARIES, GET_DICTIONARIES_SUCCESS, GET_DICTIONARIES_FAILURE,
     DELETE_DICTIONARY, DELETE_DICTIONARY_SUCCESS, DELETE_DICTIONARY_FAILURE,
+    UPDATE_DICTIONARY, UPDATE_DICTIONARY_SUCCESS, UPDATE_DICTIONARY_FAILURE,
 } from './../constants'
 
 const initialState = {
@@ -16,10 +17,38 @@ const initialState = {
     deletedDictionary: null,
     deleteDictionaryLoader: false,
     deleteDictionaryError: null,
+
+    updatedDictionary: null,
+    updateDictionaryLoader: false,
+    updateDictionaryError: null,
 }
 
 export default function dictionaryReducer(state = initialState, action) {
     switch (action.type) {
+        case UPDATE_DICTIONARY:
+            return {
+                ...state,
+                updatedDictionary: null,
+                updateDictionaryLoader: true,
+                updateDictionaryError: null
+            }
+
+        case UPDATE_DICTIONARY_SUCCESS:
+            return {
+                ...state,
+                updatedDictionary: action.payload,
+                updateDictionaryLoader: false,
+                updateDictionaryError: null
+            }
+
+        case UPDATE_DICTIONARY_FAILURE:
+            return {
+                ...state,
+                updatedDictionary: null,
+                updateDictionaryLoader: false,
+                updateDictionaryError: action.payload
+            }
+
         case DELETE_DICTIONARY:
             return {
                 ...state,

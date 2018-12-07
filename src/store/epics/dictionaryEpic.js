@@ -1,4 +1,4 @@
-import { CREATE_DICTIONARY, GET_DICTIONARIES, DELETE_DICTIONARY } from './../constants'
+import { CREATE_DICTIONARY, GET_DICTIONARIES, DELETE_DICTIONARY, UPDATE_DICTIONARY } from './../constants'
 import { Observable } from 'rxjs/Rx';
 import { dictionaryAction } from './../actions/index'
 
@@ -27,6 +27,16 @@ export default class dictionaryEpic {
                         dictionaryAction.getDictionaries()
                     )
                 }
+            })
+
+    static updateDictionary = (action$) =>
+        action$.ofType(UPDATE_DICTIONARY)
+            .switchMap(({ payload }) => {
+                localStorage.setItem('dictionaries', JSON.stringify(payload))
+                return Observable.of(
+                    dictionaryAction.updateDictionarySuccess(payload),
+                    dictionaryAction.getDictionaries()
+                )
             })
 
     static deleteDictionary = (action$) =>

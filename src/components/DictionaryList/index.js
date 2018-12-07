@@ -83,6 +83,13 @@ class DictionaryList extends Component {
                                                             )
                                                         })
                                                     }
+                                                    <Table.Row>
+                                                        <Table.Cell colSpan='3'>
+                                                            <Button onClick={() => this.props.history.push(`/edit/${i}`)} fluid size='tiny' basic color='orange'>
+                                                                Edit
+                                                            </Button>
+                                                        </Table.Cell>
+                                                    </Table.Row>
                                                 </Table.Body>
                                             </Table>
                                         </Accordion.Content>

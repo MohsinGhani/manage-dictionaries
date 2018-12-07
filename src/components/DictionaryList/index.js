@@ -19,8 +19,6 @@ class DictionaryList extends Component {
         newIndex === this.state.activeIndex ? this.setState({ activeIndex: null }) : this.setState({ activeIndex: newIndex })
     }
 
-    removeRowFromDictionary = (index) => { }
-
     deleteDictionary = (index) => {
         this.setState({ artificialLoader: true })
         setTimeout(() => {
@@ -28,12 +26,22 @@ class DictionaryList extends Component {
             dictionaries.splice(index, 1)
             this.props.deleteDictionary(dictionaries)
             this.setState({ artificialLoader: false })
-        }, 2000)
+        }, 1000)
+    }
+
+    deleteDictionaryRow = (dicIndex, rowIndex) => {
+        setTimeout(() => {
+            let dictionaries = this.props.dictionaries
+            dictionaries[dicIndex].splice(rowIndex, 1)
+            this.props.deleteDictionary(dictionaries)
+            this.setState({ artificialLoader: false })
+        }, 1000)
     }
 
     componentDidMount() {
         this.props.getDictionaries()
     }
+
     render() {
         const { activeIndex } = this.state
         return (
@@ -67,8 +75,8 @@ class DictionaryList extends Component {
                                                                     <Table.Cell>{row.domain}</Table.Cell>
                                                                     <Table.Cell>{row.range}</Table.Cell>
                                                                     <Table.Cell collapsing>
-                                                                        <Button size='tiny' circular basic icon onClick={() => this.removeRowFromDictionary(index)}>
-                                                                            <Icon name='delete' />
+                                                                        <Button onClick={() => this.deleteDictionaryRow(i, index)} size='tiny' circular basic icon>
+                                                                            <Icon name={this.state.artificialLoader ? 'stop' : 'delete'} />
                                                                         </Button>
                                                                     </Table.Cell>
                                                                 </Table.Row>

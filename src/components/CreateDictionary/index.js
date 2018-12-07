@@ -3,7 +3,7 @@ import './index.css'
 import { connect } from 'react-redux';
 import { dictionaryAction } from './../../store/actions'
 import { withRouter } from 'react-router-dom';
-import { Container, Input, Grid, Divider, Button, Icon, Segment, Header } from 'semantic-ui-react'
+import { Container, Input, Grid, Divider, Button, Icon, Segment, Header, Message } from 'semantic-ui-react'
 import TopNav from './../Header'
 
 class CreateDictionary extends Component {
@@ -11,7 +11,8 @@ class CreateDictionary extends Component {
         super(props)
         this.state = {
             dictionary: [{ domain: '', range: '' }],
-            artificialLoader: false
+            artificialLoader: false,
+            isConsistence: true
         }
     }
 
@@ -34,14 +35,24 @@ class CreateDictionary extends Component {
 
     handleDomainInput = (e, i) => {
         let dictionary = this.state.dictionary
+        this.handleConsistency(dictionary, e.target.value)
         dictionary[i].domain = e.target.value
         this.setState({ dictionary })
     }
 
     handleRangeInput = (e, i) => {
         let dictionary = this.state.dictionary
+        this.handleConsistency(dictionary, e.target.value)
         dictionary[i].range = e.target.value
         this.setState({ dictionary })
+    }
+
+    handleConsistency = (dictionary, value) => {
+        dictionary && dictionary.map((data, index) => {
+            if (data.domain === value || data.range === value) {
+                this.setState({ isConsistence: false })
+            }
+        })
     }
 
     createNewDictionary = () => {
@@ -49,6 +60,13 @@ class CreateDictionary extends Component {
         setTimeout(() => {
             this.props.createDictionary(this.state.dictionary)
         }, 2000)
+    }
+
+    removeConsistency = () => {
+        this.setState({
+            isConsistence: true,
+            dictionary: [{ domain: '', range: '' }]
+        })
     }
 
     componentWillUpdate(nextProps) {
@@ -64,9 +82,11 @@ class CreateDictionary extends Component {
                     <Segment>
                         <Header as='h3' textAlign='left'>
                             Create Dictionary
-                    </Header>
+                        </Header>
                     </Segment>
-
+                    {
+                        !this.state.isConsistence ? <Message color='red'>Inconsistency Occurred <a onClick={this.removeConsistency} style={{ cursor: 'pointer' }}><strong>Clear</strong></a></Message> : ''
+                    }
                     <Segment clearing color='blue'>
                         {
                             this.state.dictionary && this.state.dictionary.map((row, index) => {
@@ -74,10 +94,10 @@ class CreateDictionary extends Component {
                                     <div style={{ margin: '10px 0 10px 0' }} className="row" key={index}>
                                         <div className='col-md-1'></div>
                                         <div className='col-md-5'>
-                                            <Input focus fluid placeholder='Write Domain here' onChange={(event) => this.handleDomainInput(event, index)} />
+                                            <Input focus fluid placeholder='Write Domain here' value={this.state.dictionary[index].domain} onChange={(event) => this.handleDomainInput(event, index)} />
                                         </div>
                                         <div className='col-md-5'>
-                                            <Input focus fluid placeholder='Write Range here' onChange={(event) => this.handleRangeInput(event, index)} />
+                                            <Input focus fluid placeholder='Write Range here' value={this.state.dictionary[index].range} onChange={(event) => this.handleRangeInput(event, index)} />
                                         </div>
                                         <div className='col-md-1'>
                                             <Button circular basic icon onClick={() => this.removeRowInDictionary(index)}>
@@ -92,7 +112,7 @@ class CreateDictionary extends Component {
                         <div className="row" style={{ margin: '0' }} >
                             <div className="col-md-1"></div>
                             <div className="col-md-10">
-                                <Button loading={this.state.artificialLoader} onClick={this.createNewDictionary} basic fluid color='blue'>
+                                <Button loading={this.state.artificialLoader} disabled={!this.state.isConsistence} onClick={this.createNewDictionary} basic fluid color='blue'>
                                     Create
                                 </Button>
                             </div>

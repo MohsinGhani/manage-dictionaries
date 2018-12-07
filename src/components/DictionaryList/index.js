@@ -3,7 +3,7 @@ import './index.css'
 import { connect } from 'react-redux';
 import { dictionaryAction } from './../../store/actions'
 import { withRouter } from 'react-router-dom';
-import { Container, Accordion, Icon, Segment, Table, Button } from 'semantic-ui-react'
+import { Container, Accordion, Icon, Segment, Table, Button, Message } from 'semantic-ui-react'
 
 class DictionaryList extends Component {
     constructor(props) {
@@ -18,8 +18,6 @@ class DictionaryList extends Component {
     }
 
     removeRowFromDictionary = (index) => { }
-
-
 
     render() {
         const { activeIndex } = this.state
@@ -63,6 +61,14 @@ class DictionaryList extends Component {
                             </Segment>
                         )
                     })
+                }
+
+                {
+                    this.props.getDictionariesError ?
+                        <Message negative>
+                            <Message.Header>{this.props.getDictionariesError}!</Message.Header>
+                        </Message>
+                        : ''
                 }
             </Container>
         );

@@ -13,7 +13,8 @@ export default class dictionaryEpic {
                     newDictionaries.push(payload)
                     localStorage.setItem('dictionaries', JSON.stringify(newDictionaries))
                     return Observable.of(
-                        dictionaryAction.createDictionarySuccess(payload)
+                        dictionaryAction.createDictionarySuccess(payload),
+                        dictionaryAction.getDictionaries()
                     )
                 }
                 else {
@@ -22,7 +23,8 @@ export default class dictionaryEpic {
                     createdDictionary = JSON.stringify(createdDictionary)
                     localStorage.setItem('dictionaries', createdDictionary)
                     return Observable.of(
-                        dictionaryAction.createDictionarySuccess(payload)
+                        dictionaryAction.createDictionarySuccess(payload),
+                        dictionaryAction.getDictionaries()
                     )
                 }
             })
@@ -39,7 +41,7 @@ export default class dictionaryEpic {
                 }
                 else {
                     return Observable.of(
-                        dictionaryAction.getDictionariesSuccess({ error: 'No Dictionary Found' })
+                        dictionaryAction.getDictionariesFailure('No Dictionary Found, Kindly Create Dictionary')
                     )
                 }
             })

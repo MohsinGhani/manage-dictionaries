@@ -19,10 +19,10 @@ export class dictionaryAction {
         }
     }
 
-    static getDictionariesFailure(error) {
+    static getDictionariesFailure(payload) {
         return {
             type: GET_DICTIONARIES_FAILURE,
-            error
+            payload
         }
     }
     

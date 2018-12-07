@@ -1,4 +1,4 @@
-import { CREATE_DICTIONARY } from './../constants'
+import { CREATE_DICTIONARY, GET_DICTIONARIES } from './../constants'
 import { Observable } from 'rxjs/Rx';
 import { dictionaryAction } from './../actions/index'
 
@@ -23,6 +23,23 @@ export default class dictionaryEpic {
                     localStorage.setItem('dictionaries', createdDictionary)
                     return Observable.of(
                         dictionaryAction.createDictionarySuccess(payload)
+                    )
+                }
+            })
+
+    static getDictionaries = (action$) =>
+        action$.ofType(GET_DICTIONARIES)
+            .switchMap(({ }) => {
+                let createdDictionaries = localStorage.getItem('dictionaries')
+                if (createdDictionaries) {
+                    let dictionaries = JSON.parse(createdDictionaries)
+                    return Observable.of(
+                        dictionaryAction.getDictionariesSuccess({ dictionaries })
+                    )
+                }
+                else {
+                    return Observable.of(
+                        dictionaryAction.getDictionariesSuccess({ error: 'No Dictionary Found' })
                     )
                 }
             })

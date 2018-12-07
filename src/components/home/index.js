@@ -11,8 +11,12 @@ class Home extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            isCreateRender: true
+            isCreateRender: false
         }
+    }
+
+    componentDidMount(){
+        this.props.getDictionaries()
     }
 
     render() {
@@ -63,7 +67,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        createDictionary: (dictionary) => dispatch(dictionaryAction.createDictionary(dictionary)),
+        getDictionaries: () => dispatch(dictionaryAction.getDictionaries()),
     };
 };
 

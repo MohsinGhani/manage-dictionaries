@@ -12,8 +12,10 @@ class CreateDictionary extends Component {
         this.state = {
             dictionary: [{ domain: '', range: '' }],
             artificialLoader: false,
-            isConsistence: true,
-            isEmptyField: true
+            isEmptyField: true,
+            errorIndex: null,
+            errorMsg: null,
+            errorType: null
         }
     }
 
@@ -37,27 +39,27 @@ class CreateDictionary extends Component {
     handleDomainInput = (e, i) => {
         let dictionary = this.state.dictionary
         this.setState({ isEmptyField: false })
-        this.handleConsistency(dictionary, e.target.value)
         dictionary[i].domain = e.target.value
-        this.setState({ dictionary })
+        this.setState({
+            dictionary,
+            errorIndex: null,
+            errorMsg: null,
+            errorType: null
+        })
         this.handleEmptyField()
     }
 
     handleRangeInput = (e, i) => {
         let dictionary = this.state.dictionary
         this.setState({ isEmptyField: false })
-        this.handleConsistency(dictionary, e.target.value)
         dictionary[i].range = e.target.value
-        this.setState({ dictionary })
-        this.handleEmptyField()
-    }
-
-    handleConsistency = (dictionary, value) => {
-        dictionary && dictionary.map((data, index) => {
-            if (data.domain === value || data.range === value) {
-                this.setState({ isConsistence: false, isEmptyField: true })
-            }
+        this.setState({
+            dictionary,
+            errorIndex: null,
+            errorMsg: null,
+            errorType: null
         })
+        this.handleEmptyField()
     }
 
     handleEmptyField = () => {
@@ -69,17 +71,59 @@ class CreateDictionary extends Component {
     }
 
     createNewDictionary = () => {
-        this.setState({ artificialLoader: true })
-        setTimeout(() => {
-            this.props.createDictionary(this.state.dictionary)
-        }, 1000)
-    }
-
-    removeConsistency = () => {
-        this.setState({
-            isConsistence: true,
-            dictionary: [{ domain: '', range: '' }]
+        var isConsistence = true
+        this.state.dictionary.forEach((dicItem, index) => {
+            if (dicItem.range === dicItem.domain) {
+                isConsistence = false
+                this.setState({
+                    errorIndex: index,
+                    errorMsg: `${dicItem.range}! range and domain are same at row ${index + 1}`,
+                    errorType: 3
+                })
+            }
+            for (var i = index + 1; i < this.state.dictionary.length; i++) {
+                let c = this.state.dictionary[i]
+                if (dicItem.domain === c.domain) {
+                    isConsistence = false
+                    this.setState({
+                        errorIndex: index,
+                        errorMsg: `${dicItem.domain}! domain are same at row ${index + 1} and ${i + 1}`,
+                        errorType: 1
+                    })
+                }
+                if (dicItem.range === c.range) {
+                    isConsistence = false
+                    this.setState({
+                        errorIndex: index,
+                        errorMsg: `${dicItem.range}! range are same at row ${index + 1} and ${i + 1}`,
+                        errorType: 2
+                    })
+                }
+                if (dicItem.domain === c.range) {
+                    isConsistence = false
+                    this.setState({
+                        errorIndex: index,
+                        errorMsg: `${dicItem.domain}! domain and range are same at row ${index + 1} and ${i + 1}`,
+                        errorType: 1
+                    })
+                }
+                if (dicItem.range === c.domain) {
+                    isConsistence = false
+                    this.setState({
+                        errorIndex: index,
+                        errorMsg: `${dicItem.range}! domain and range are same at row ${index + 1} and ${i + 1}`,
+                        errorType: 2
+                    })
+                }
+            }
         })
+
+        if (isConsistence) {
+            this.setState({ artificialLoader: true })
+            setTimeout(() => {
+                this.props.createDictionary(this.state.dictionary)
+            }, 1000)
+        }
     }
 
     componentWillUpdate(nextProps) {
@@ -99,7 +143,7 @@ class CreateDictionary extends Component {
                         </Header>
                     </Segment>
                     {
-                        !this.state.isConsistence ? <Message color='red'>Inconsistency Occurred Click here to <a onClick={this.removeConsistency} style={{ cursor: 'pointer' }}><strong>Clear</strong></a></Message> : ''
+                        this.state.errorMsg ? <Message color='red'>{this.state.errorMsg}</Message> : ''
                     }
                     <Segment clearing color='blue'>
                         {
@@ -108,10 +152,10 @@ class CreateDictionary extends Component {
                                     <div style={{ margin: '10px 0 10px 0' }} className="row" key={index}>
                                         <div className='col-md-1'></div>
                                         <div className='col-md-5'>
-                                            <Input focus fluid placeholder='Write Domain here' value={this.state.dictionary[index].domain} onChange={(event) => this.handleDomainInput(event, index)} />
+                                            <Input error={this.state.errorIndex === index && (this.state.errorType === 1 || this.state.errorType === 3)} focus fluid placeholder='Write Domain here' value={this.state.dictionary[index].domain} onChange={(event) => this.handleDomainInput(event, index)} />
                                         </div>
                                         <div className='col-md-5'>
-                                            <Input focus fluid placeholder='Write Range here' value={this.state.dictionary[index].range} onChange={(event) => this.handleRangeInput(event, index)} />
+                                            <Input error={this.state.errorIndex === index && (this.state.errorType === 2 || this.state.errorType === 3)} focus fluid placeholder='Write Range here' value={this.state.dictionary[index].range} onChange={(event) => this.handleRangeInput(event, index)} />
                                         </div>
                                         <div className='col-md-1'>
                                             <Button circular basic icon onClick={() => this.removeRowInDictionary(index)}>
@@ -126,7 +170,7 @@ class CreateDictionary extends Component {
                         <div className="row" style={{ margin: '0' }} >
                             <div className="col-md-1"></div>
                             <div className="col-md-10">
-                                <Button loading={this.state.artificialLoader} disabled={!this.state.isConsistence || this.state.isEmptyField} onClick={this.createNewDictionary} basic fluid color='blue'>
+                                <Button loading={this.state.artificialLoader} disabled={this.state.isEmptyField} onClick={this.createNewDictionary} basic fluid color='blue'>
                                     Create
                                 </Button>
                             </div>

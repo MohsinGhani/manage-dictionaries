@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import './index.css'
+    import React, { Component } from 'react';
+    import './index.css'
 import { connect } from 'react-redux';
 import { dictionaryAction } from './../../store/actions'
 import { withRouter } from 'react-router-dom';
